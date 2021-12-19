@@ -1,0 +1,19 @@
+{
+	"name": "cf-doc-editing",
+	"version": "1.0.0",
+	"description": "A conflict free doc editing application",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ToMax446/Conflict-Free-Doc-Editing.git"
+	},
+	"author": "Yakir Bitan, Tom Levy",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ToMax446/Conflict-Free-Doc-Editing/issues"
+	},
+	"homepage": "https://github.com/ToMax446/Conflict-Free-Doc-Editing#readme"
+}
