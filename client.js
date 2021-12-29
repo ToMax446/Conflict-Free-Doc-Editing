@@ -1,7 +1,6 @@
 class Client {
-    constructor(id, host, port, string, peers, string_operations) {
+    constructor(id, port, string, peers, string_operations) {
         this.id = id;
-        this.host = host;
         this.port = port;
         this.string = string;
         this.peers = peers;
@@ -26,20 +25,39 @@ class Message {
 }
 
 const net = require('net');
+const fs = require('fs');
 
-let id = 1;
-let host = '127.0.0.1';
-let string = "";
-let port = 65000 + id;
-let peers = [
-    new Peer(1, '127.0.0.1', 65000 + 1),
-    new Peer(2, '127.0.0.1', 65000 + 2),
-    new Peer(3, '127.0.0.1', 65000 + 3)
-];
-let string_operations = ["update", "merge"];
+// File parsing
+let file = fs.readFileSync(process.argv[2], 'utf-8').split(/\r?\n/);
+file = file.reverse();
+let id = parseInt(file.pop());
+let port = parseInt(file.pop());
+let string = file.pop();
+file.pop(); // ""
+let peers = [];
+while (true) {
+    let line = file.pop();
+    if (line == "") {
+        break;
+    }
+    let id = parseInt(line.split(" ")[0]);
+    let host = line.split(" ")[1];
+    let port = parseInt(line.split(" ")[2]);
+    let peer = new Peer(id, host, port);
+    peers.push(peer);
+}
+file.pop(); // ""
+let string_operations = [];
+while (true) {
+    let line = file.pop();
+    if (line == "") {
+        break;
+    }
+    string_operations.push(line);
+}
 
 // Init client
-let client = new Client(id, host, port, string, peers, string_operations);
+let client = new Client(id, port, string, peers, string_operations);
 
 // The client connects via sockets to other peers with greater id
 for (const peer of client.peers) {
@@ -51,7 +69,7 @@ for (const peer of client.peers) {
     socket.on('connect', () => {
         console.log('Connection from ::ffff:', socket.localAddress, 'port', socket.localPort);
         client.sockets.push(socket); // add peer socket to the pool of the client sockets
-        if (client.sockets.length == peers.length - 1) {
+        if (client.sockets.length == peers.length) {
             eventLoop();
         }
     }); // what happen when socket connection is successfully established
@@ -71,7 +89,7 @@ client.server = net.createServer((socket) => {
     console.log('Connection from', socket.remoteAddress, 'port', socket.remotePort);
     socket.on('data', handle); // what happen when receiving data from the socket
     client.sockets.push(socket); // add peer socket to the pool of the client sockets
-    if (client.sockets.length == peers.length - 1) {
+    if (client.sockets.length == peers.length) {
         eventLoop();
     }
 });

@@ -2,7 +2,7 @@
 	"name": "cf-doc-editing",
 	"version": "1.0.0",
 	"description": "A conflict free doc editing application",
-	"main": "client1.js",
+	"main": "client.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
