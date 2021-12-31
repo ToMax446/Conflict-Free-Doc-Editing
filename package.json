@@ -4,7 +4,11 @@
 	"description": "A conflict free doc editing application",
 	"main": "client.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"first": "nodemon client.js input-file-1.txt",
+		"second": "nodemon client.js input-file-2.txt",
+		"third": "nodemon client.js input-file-3.txt",
+		"start": "first && second && third"
 	},
 	"repository": {
 		"type": "git",
