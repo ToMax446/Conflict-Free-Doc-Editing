@@ -20,7 +20,5 @@
 		"url": "https://github.com/ToMax446/Conflict-Free-Doc-Editing/issues"
 	},
 	"homepage": "https://github.com/ToMax446/Conflict-Free-Doc-Editing#readme",
-	"dependencies": {
-		"express": "^4.17.2"
-	}
+	"dependencies": {}
 }
