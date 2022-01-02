@@ -145,7 +145,9 @@ function handle(buffer) {
         return;
     }
     console.log(`Client ${client.id} received an update operation <${event.op}, ${event.timestamp}> from client ${event.id}`);
-    client.timestamp = Math.max(event.timestamp, client.timestamp) + 1;
+    if(event.local !== true){
+        client.timestamp = Math.max(event.timestamp, client.timestamp) + 1;
+    }
     operationQueue.push(event);
     operationQueue.sort((firstEl, secondEl) => {
         // make sure storage is sorted by ts
@@ -207,6 +209,7 @@ function operationLoop() {
             //     const ans = firstEl.timestamp - secondEl.timestamp;
             //     return ans === 0 ? firstEl.id - secondEl.id : ans;
             // });
+            event.local = true;
             handle(JSON.stringify(event));
         });
         setTimeout(() => operationLoop(), 1000);
