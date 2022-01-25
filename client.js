@@ -146,7 +146,7 @@ function handle(buffer) {
     }
     console.log(`Client ${client.id} received an update operation <${event.op}, ${event.timestamp}> from client ${event.id}`);
     if(event.local !== true){
-        client.timestamp = Math.max(event.timestamp, client.timestamp) + 1;
+        client.timestamp = Math.max(event.timestamp, client.timestamp) + 1; // Lamport algorithm
     }
     operationQueue.push(event);
     operationQueue.sort((firstEl, secondEl) => {
@@ -156,6 +156,9 @@ function handle(buffer) {
         return ans === 0 ? firstEl.id - secondEl.id : ans;
     });
     const [_, ...rest] = operationQueue;
+    // First operation is to take all the Id's of the events and filter out our client Id
+    // Second operation is to convert the above object to set for removing duplicated Id's numbers
+    // Third If the size of group is equal to all my peers, we can remove the first event in the operationQueue
     if ((new Set(rest.map((e2) => e2.id).filter(id => id !== client.id)).size === client.peers.length)) {
         const event1 = operationQueue.shift();
         console.log(`Client ${client.id} removed operation  <${event1.op},  ${event1.timestamp}> from storage`);
@@ -215,7 +218,7 @@ function operationLoop() {
         setTimeout(() => operationLoop(), 1000);
     } else {
         console.log(`Client ${client.id} finished his local string modifications`);
-        close();
         for (const socket of client.sockets) socket.write(JSON.stringify("goodbye"));
+        close();
     }
 }
